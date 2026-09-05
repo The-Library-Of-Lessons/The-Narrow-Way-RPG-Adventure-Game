@@ -26,8 +26,9 @@ window.Art = (() => {
   }
   function person(c,x,y,kind='eli',dir='down',time=0,moving=false,action='',scale=1){
     c.save();c.translate(Math.round(x),Math.round(y));c.scale(scale,scale);
-    const step=moving?Math.sin(time*13):0,bob=moving?Math.round(Math.abs(step)):0;
-    ellipse(c,0,1,7,3,'#263f3644');c.translate(0,-bob);
+    // Animate the limbs while keeping the head and torso at a stable height.
+    const step=moving?[0,1,0,-1][Math.floor(time*8)%4]:0;
+    ellipse(c,0,1,7,3,'#263f3644');
     const palettes={iona:['#4d7897','#b78361','#423e3b'],tamar:['#bd795e','#cf9b72','#584734'],ruth:['#987797','#b7805b','#493b35'],boaz:['#a58c57','#cb9972','#766b55'],reuben:['#71856b','#c29677','#c8c4b1'],neri:['#628f9c','#a87653','#493f35'],sela:['#92786c','#c8956d','#514136'],esther:['#97647b','#ad7956','#d0c5a9'],oren:['#8e9a65','#cda582','#6c4c37']};
     const pal=palettes[kind],coat=pal?pal[0]:kind==='mara'?'#bd866a':kind==='jonah'?'#869c9c':kind==='child'?'#d6b668':'#567f77';
     const trim=kind==='eli'?'#e7cc87':'#d9c79e',skin=pal?pal[1]:'#e1b486',hair=pal?pal[2]:kind==='mara'?'#b7b19a':kind==='jonah'?'#655547':'#614b3d';

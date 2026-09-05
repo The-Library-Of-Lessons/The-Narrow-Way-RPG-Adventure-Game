@@ -145,7 +145,9 @@
       }
       if(dist(j,{x:365,y:330})<45&&dist(state,j)<75){stage(7);toast('You made it home together. Light the village lantern.');}
     }
-    const tx=clamp(state.x-W/2,0,960-W),ty=clamp(state.y-H/2,0,640-H);camera.x+=(tx-camera.x)*Math.min(1,dt*8);camera.y+=(ty-camera.y)*Math.min(1,dt*8);
+    // Share the player's pixel phase: a lagging, separately rounded camera
+    // makes the sprite wobble against the scrolling map, even at steady speed.
+    camera.x=clamp(state.x-W/2,0,960-W);camera.y=clamp(state.y-H/2,0,640-H);
     nearest=nearby();$('prompt').hidden=!nearest;$('prompt').querySelector('span').textContent=nearest?nearest.text:'';const verb=!nearest?'LOOK':nearest.kind==='exit'?'TRAVEL':nearest.kind==='camp'?'REST':nearest.kind==='basket'||nearest.type==='herb'?'GATHER':nearest.kind==='sign'||nearest.kind==='secret'||nearest.type==='sign'?'READ':nearest.kind==='switch'?'USE':nearest.kind==='beacon'?'LIGHT':nearest.kind==='bell'?'RING':'TALK';$('touch-interact').textContent=verb;$('touch-interact').setAttribute('aria-label',nearest?verb+': '+nearest.text:'Look for something nearby');
   }
   function marker(x,y,type='!'){
