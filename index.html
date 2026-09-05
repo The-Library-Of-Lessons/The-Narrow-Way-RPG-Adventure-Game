@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#192e2d">
+  <title>The Narrow Way · Roads of Mercy</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main id="game" aria-label="The Narrow Way game">
+  <canvas id="world" width="480" height="270" aria-label="Pixel art adventure. Move with WASD or arrows; interact with E; attack with J; dodge with Space."></canvas>
+  <div class="vignette"></div>
+  <header id="hud" hidden>
+    <div class="status"><span class="portrait">✦</span><div><div class="name">ELI <span>THE LANTERN BEARER</span></div><div id="hearts" aria-label="Health"></div></div></div>
+    <button id="objective" class="objective"><span>CHAPTER I · WILLOWBROOK</span><strong id="objective-text"></strong></button>
+    <nav><button id="journal-button" aria-label="Open wisdom journal" title="Journal (B)">▤</button><button id="sound" aria-label="Toggle sound" title="Sound">♪</button><button id="pause" aria-label="Open pause menu" title="Menu (Esc)">Ⅱ</button></nav>
+  </header>
+  <div id="area" class="area" hidden><small>THE NARROW WAY</small><strong>Willowbrook</strong><span>A small light is still a light.</span></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <button id="minimap-button" hidden aria-label="Open explored world map (M)"><span id="minimap-name">WILLOWBROOK</span><canvas id="minimap" width="144" height="96"></canvas><small>MAP · M <span>◆ YOU</span></small></button>
+  <section id="atlas" class="overlay" hidden aria-label="World map"><div class="atlas-card"><header><div><small>ROADS OF MERCY</small><h2>A world, one step at a time.</h2></div><button id="atlas-close">Return ×</button></header><div id="region-tabs"></div><canvas id="large-map" width="720" height="480" aria-label="Explored region terrain and landmarks"></canvas><p id="map-caption"></p><div class="map-legend">◆ You　◇ Exit　● Person　✦ Objective　⬡ Checkpoint<br>Unexplored ground stays hidden. Secrets are yours to discover.</div><div id="fast-travel"></div></div></section>
+  <section id="journal" class="overlay" hidden aria-label="Wisdom journal"><div class="journal-card"><header><div><small>LEARNING TO LOVE</small><h2>The pilgrim’s journal</h2></div><button id="journal-close">Return ×</button></header><p class="journal-note">Scripture is quoted from the KJV. Reflections and characters are original fiction, not additional words of Jesus. These pages record discoveries—not a score of your worth.</p><div id="inventory"></div><div id="journal-pages"></div></div></section>
+  <div id="prompt" hidden><kbd>E</kbd> <span>Talk</span></div>
+  <div id="desktop-help" hidden><span><kbd>W A S D</kbd> Move</span><span><kbd>E</kbd> Interact</span><span><kbd>J</kbd> Strike</span><span><kbd>SPACE</kbd> Dodge</span><span><kbd>ESC</kbd> Pause</span></div>
+  <div id="touch" hidden><div id="stick"><i></i></div><div class="touch-actions"><button id="touch-dodge" aria-label="Dodge">DASH</button><button id="touch-attack" aria-label="Attack">STRIKE</button><button id="touch-interact" aria-label="Interact">TALK</button></div></div>
+  <section id="title" class="overlay title-screen">
+    <div class="title-top"><span>AN ORIGINAL PIXEL ADVENTURE</span><span>FIVE CONNECTED REGIONS</span></div>
+    <div class="title-content"><div class="eyebrow"><i></i> A PILGRIM'S STORY <i></i></div><h1>The Narrow<br><em>Way</em><span>✦</span></h1><div class="title-rule"></div><p class="subtitle">THE LANTERN AT WILLOWBROOK</p><p class="intro">You were sent to carry a light.<br>You didn't expect to become one.</p><div class="title-buttons"><button id="start" class="primary">Begin your journey <span>→</span></button><button id="continue" hidden>Continue journey <span>↗</span></button></div><p id="save-warning" class="quiet"></p></div>
+    <footer class="title-bottom"><span>EXPLORE · PROTECT · RESTORE</span><span>Keyboard & touch <b>◆</b> Play at your pace</span></footer>
+  </section>
+  <section id="dialogue" class="dialogue" hidden aria-label="Conversation"><div class="speaker-portrait"><canvas id="face" width="48" height="56"></canvas></div><div class="dialogue-body"><small id="speaker-role"></small><h2 id="speaker"></h2><p id="dialogue-text"></p><div id="choices"></div><button id="next">Continue <span>↵</span></button></div></section>
+  <section id="menu" class="overlay menu" hidden><div class="menu-card"><small>TAKE A BREATH</small><h2>The journey can wait.</h2><p id="menu-objective"></p><div class="menu-actions"><button id="resume" class="primary">Return to the path →</button><button id="save">Save journey</button><button id="export">Export save</button><button id="import">Import save</button><button id="motion">Reduced motion: off</button><button id="assist">Gentle combat: off</button><button id="restart">Start a new journey</button></div><p class="quiet">WASD / arrows · E interact · J strike · Space dodge<br>Autosaves at milestones. Your progress stays in this browser.</p><input id="import-file" type="file" accept="application/json,.json" hidden></div></section>
+  <section id="ending" class="overlay ending" hidden><div class="menu-card"><small>CHAPTER ONE COMPLETE</small><span class="ending-star">✦</span><h2>A light brought home.</h2><p>You crossed the bridge for a stranger.<br>Tomorrow, he will cross it for someone else.</p><blockquote>“Be not overcome of evil, but overcome evil with good.”<cite>Romans 12:21 · KJV</cite></blockquote><div id="ending-stats"></div><button id="explore" class="primary">Stay a little longer →</button><p class="quiet">The Narrow Way · A playable first chapter<br>Original Christian allegory; fictional characters and events.</p></div></section>
+  <div id="rotate">Best enjoyed in landscape. You can keep playing in portrait.</div>
+</main>
+<script src="src/story.js"></script><script src="src/art.js"></script><script src="src/audio.js"></script><script src="src/campaign-data.js"></script><script src="src/nine-roads-data.js"></script><script src="src/nine-roads.js"></script><script src="src/campaign.js"></script><script src="src/game.js"></script>
+</body></html>
