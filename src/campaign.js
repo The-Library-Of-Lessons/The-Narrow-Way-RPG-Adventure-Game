@@ -176,7 +176,8 @@ window.Campaign = (() => {
   }
   function buildMap(id){
     if(maps[id])return maps[id];if(id==='village')return maps[id]=Art.makeMap();
-    const c=document.createElement('canvas');c.width=960;c.height=640;const g=c.getContext('2d'),A=Art;
+    const c=document.createElement('canvas');c.width=960;c.height=640;const g=c.getContext('2d',{willReadFrequently:true}),A=Art;
+    c.addEventListener('contextrestored',()=>{if(maps[id]===c)delete maps[id];});
     if(NineRoads.buildMap(id,c))return maps[id]=c;
     const pal=id==='orchard'?['#a4b86b','#afbf76','#d3bd87']:id==='marsh'?['#668e81','#71998a','#b4b38b']:id==='tower'?['#92978a','#9da293','#b9b39b']:['#a3b6a1','#b0c2a9','#dbd0b0'];
     for(let y=0;y<640;y+=16)for(let x=0;x<960;x+=16){A.rect(g,x,y,16,16,pal[A.hash(x,y)>.5?1:0]);if(A.hash(y,x)>.45)A.rect(g,x+5,y+9,2,3,id==='marsh'?'#527e73':'#809469');}
@@ -275,5 +276,6 @@ window.Campaign = (() => {
   }
   function attach(a){api=a;NineRoads.attach({state:s,say,lines,choose,advance,lesson,save:api.save,toast:api.toast,ending:api.ending});$('minimap-button').onclick=()=>openPanel('atlas');$('journal-button').onclick=()=>openPanel('journal');$('atlas-close').onclick=closePanels;$('journal-close').onclick=closePanels;document.querySelector('.subtitle').textContent='ROADS OF MERCY';const host=$('fast-travel').parentElement;const guidance=document.createElement('button');guidance.id='map-guidance';guidance.textContent='Toggle objective guidance';guidance.onclick=()=>{j().choices.guidance=j().choices.guidance===1?0:1;guidance.textContent='Objective guidance: '+(j().choices.guidance===1?'off':'on');api.save(true);renderAtlas();};host.append(guidance);const hint=document.createElement('button');hint.textContent='Ask for a progressive hint (H)';hint.onclick=()=>{closePanels();NineRoads.hint();};host.append(hint);}
   function key(code){if(mapMode){if(['Escape','KeyM','KeyB'].includes(code)){closePanels();return true;}return false;}if(api.mode()==='play'&&code==='KeyH'){NineRoads.hint();return true;}if(api.mode()==='play'&&code==='KeyC'&&s().stage===8){NineRoads.companion();return true;}if(code==='KeyM'){openPanel('atlas');return true;}if(code==='KeyB'){openPanel('journal');return true;}return false;}
-  return {fresh,validate,attach,nearby,interact,mara,blocked,update,drawWorld,drawMini,title,connect,target:objectiveTarget,key,complete,travel,objects,buildMap};
+  function invalidateMaps(){for(const id of Object.keys(maps))delete maps[id];}
+  return {fresh,validate,attach,nearby,interact,mara,blocked,update,drawWorld,drawMini,title,connect,target:objectiveTarget,key,complete,travel,objects,buildMap,invalidateMaps};
 })();

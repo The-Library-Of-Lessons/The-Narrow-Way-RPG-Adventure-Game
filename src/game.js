@@ -1,13 +1,19 @@
 /* The Narrow Way: Willowbrook — dependency-free canvas game. */
 (() => {
   'use strict';
-  const $=id=>document.getElementById(id), canvas=$('world'), ctx=canvas.getContext('2d');
+  const $=id=>document.getElementById(id), canvas=$('world'), ctx=canvas.getContext('2d',{willReadFrequently:matchMedia('(pointer:coarse)').matches});
   ctx.imageSmoothingEnabled=false;
   const W=480,H=270,SAVE='narrow-way-willowbrook-v1',BACKUP=SAVE+'-backup';
   const fresh=()=>({version:1,stage:0,hp:6,x:256,y:335,flowers:[],notes:[],time:0,choice:null,jonah:{x:806,y:426},settings:{reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,gentle:false},finished:false,region:'village',journey:Campaign.fresh()});
   let state=fresh(),mode='title',clock=0,last=0,toastUntil=0,areaUntil=0,attack=0,dodge=0,invincible=0,hitPause=0,stepClock=0,shake=0;
   let camera={x:210,y:150},direction={x:0,y:1},dialogueQueue=[],dialogueEnd=null,choiceMode=false,choiceIndex=0,nearest=null,particles=[],enemies=[];
-  const keys=new Set(),stick={x:0,y:0},player={dir:'down',moving:false},map=Art.makeMap();
+  const keys=new Set(),stick={x:0,y:0},player={dir:'down',moving:false};
+  let map=Art.makeMap(),terrainDirty=false;
+  function invalidateTerrain(){terrainDirty=true;}
+  canvas.addEventListener('contextrestored',invalidateTerrain);
+  window.addEventListener('pageshow',invalidateTerrain);
+  window.addEventListener('resize',invalidateTerrain);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)invalidateTerrain();});
   const herbs=[{x:133,y:402},{x:176,y:428},{x:220,y:401}];
   const npcs=[{x:321,y:291,kind:'mara'},{x:398,y:263,kind:'child'}];
   const trees=[];
@@ -154,6 +160,8 @@
     const bob=state.settings.reduced?0:Math.sin(clock*3)*2;Art.rect(ctx,x-6,y-36+bob,13,12,'#263e33');Art.rect(ctx,x-5,y-37+bob,11,12,'#f0d595');ctx.fillStyle='#435444';ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.fillText(type,Math.round(x+1),Math.round(y-28+bob));Art.rect(ctx,x,y-25+bob,3,3,'#f0d595');
   }
   function draw(){
+    if(ctx.isContextLost?.())return;
+    if(terrainDirty){map=Art.makeMap();Campaign.invalidateMaps();ctx.imageSmoothingEnabled=false;terrainDirty=false;}
     if(mode!=='title'&&state.region!=='village'){Campaign.drawWorld(ctx,camera,clock,player);return;}
     ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,W,H);ctx.save();const sx=state.settings.reduced?0:(Math.random()-.5)*shake;ctx.translate(-Math.round(camera.x+sx),-Math.round(camera.y));ctx.drawImage(map,0,0);if(mode!=='title')NineRoads.effects(ctx,clock);
     // Animated water highlights.

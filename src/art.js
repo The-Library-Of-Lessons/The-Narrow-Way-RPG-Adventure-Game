@@ -66,8 +66,10 @@ window.Art = (() => {
     rect(c,x-14,y-29,9,13,'#465245');rect(c,x-12,y-27,5,8,lit?'#f6d586':'#8a9881');rect(c,x-15,y-30,11,2,'#3d4b3e');rect(c,x-15,y-17,11,2,'#3d4b3e');
     if(lit){const g=c.createRadialGradient(x-10,y-23,2,x-10,y-23,48);g.addColorStop(0,'#ffd58144');g.addColorStop(1,'#ffd58100');c.fillStyle=g;c.fillRect(x-58,y-71,96,96);rect(c,x-10,y-24+Math.round(Math.sin(time*8)),2,4,'#fff1b0');}
   }
-  function makeMap(){
-    const c=document.createElement('canvas');c.width=960;c.height=640;const g=c.getContext('2d');
+  function makeMap(existing){
+    const c=existing||document.createElement('canvas');c.width=960;c.height=640;const g=c.getContext('2d',{willReadFrequently:true});
+    // A restored canvas has empty storage; repaint the cached terrain itself.
+    if(!existing)c.addEventListener('contextrestored',()=>makeMap(c));
     rect(g,0,0,960,640,P.grass);
     for(let y=0;y<640;y+=16)for(let x=0;x<960;x+=16){const r=hash(x,y);rect(g,x,y,16,16,r>.55?P.grass2:P.grass);if(r>.4){rect(g,x+4,y+8,1,3,'#709952');rect(g,x+5,y+10,2,1,'#709952');}if(r>.9){rect(g,x+11,y+4,2,2,'#b2c783');}}
     // Meandering river and earthy banks.
