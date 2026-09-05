@@ -3,3 +3,9 @@ Thumbs.db
 node_modules/
 test-results/
 *.log
+android/.gradle/
+android/local.properties
+android/**/build/
+*.apk
+*.keystore
+*.jks

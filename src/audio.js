@@ -15,7 +15,7 @@ window.Sound = (() => {
       if(!timer)timer=setInterval(()=>{if(document.hidden)return;const notes=motifs[region]||melody,m=notes[note++%notes.length];tone(440*2**((m-69)/12),1.8,'sine',.035);if(note%4===0)tone(130.81,2.7,'triangle',.016);},850);
     }catch{/* Audio is optional. */}
   }
-  return {start,ambience(id){region=id;if(id==='harbor'){tone(330,1.2,'sine',.012);tone(392,1.4,'sine',.008,.4);}if(id==='refuge')tone(196,2,'triangle',.012);},toggle(){enabled=!enabled;return enabled;},get enabled(){return enabled;},fx(name){
+  return {start,suspend(){if(ctx)ctx.suspend().catch(()=>{});},resume(){if(ctx)ctx.resume().catch(()=>{});},ambience(id){region=id;if(id==='harbor'){tone(330,1.2,'sine',.012);tone(392,1.4,'sine',.008,.4);}if(id==='refuge')tone(196,2,'triangle',.012);},toggle(){enabled=!enabled;return enabled;},get enabled(){return enabled;},fx(name){
     if(name==='step')tone(115,.05,'triangle',.025);
     if(name==='hit'){tone(110,.11,'triangle',.13);tone(65,.15,'sine',.1);}
     if(name==='swing')tone(230,.09,'triangle',.055);

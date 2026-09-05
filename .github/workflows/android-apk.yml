@@ -1,0 +1,39 @@
+name: Build Android APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['android/**', 'src/**', 'assets/**', 'index.html', 'styles.css', '.github/workflows/android-apk.yml']
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Build and check Android app
+        working-directory: android
+        run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+      - name: Verify APK signature and bundled files
+        run: |
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          unzip -l "$APK" | grep 'assets/game/src/game.js'
+          unzip -l "$APK" | grep 'assets/game/index.html'
+          cp "$APK" The-Narrow-Way-0.1.0.apk
+          sha256sum The-Narrow-Way-0.1.0.apk > The-Narrow-Way-0.1.0.apk.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: The-Narrow-Way-Android-APK
+          path: |
+            The-Narrow-Way-0.1.0.apk
+            The-Narrow-Way-0.1.0.apk.sha256
+          retention-days: 90
